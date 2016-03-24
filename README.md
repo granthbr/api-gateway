@@ -1,4 +1,4 @@
-MuleSoft API Gateway Docker Image (with temporary licesnce for development)
+MuleSoft API Gateway Docker Image (with temporary license for development)
 ===============
 
 This project contains a Dockerfile for the deployment and packaging of a MuleSoft API Gateway with Docker.
