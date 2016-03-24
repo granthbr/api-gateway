@@ -1,0 +1,49 @@
+scratch:
+
+-- Had to hard coded dev into the config properties for oauth app
+-- changed the client id/secret to matcht the approved client for 'api-leagues' application in Anypoint Platform for granthbr-leagues and oauth-external
+	-- changed back to the same as the wrapper
+
+-- Received this error when attemping via the console to get the teams for barcelona:
+	ERROR 2016-02-22 13:24:04,079 [[oauth2-external].https.listener.worker.04] org.mule.exception.DefaultMessagingExceptionStrategy:
+	********************************************************************************
+	Message               : The HTTP method or content type is unsupported! (java.lang.IllegalArgumentException)
+	Code                  : MULE_ERROR-64999
+	--------------------------------------------------------------------------------
+	Exception stack is:
+	1. The HTTP method or content type is unsupported! (java.lang.IllegalArgumentException)
+	  org.apache.commons.lang.Validate:157 (null)
+	2. The HTTP method or content type is unsupported! (java.lang.IllegalArgumentException) (org.mule.api.transformer.TransformerException)
+	  org.mule.modules.oauth2.provider.transformer.HttpRequestBodyToParamMap:79 (http://www.mulesoft.org/docs/site/current3/apidocs/org/mule/api/transformer/TransformerException.html)
+	--------------------------------------------------------------------------------
+	Root Exception stack trace:
+	java.lang.IllegalArgumentException: The HTTP method or content type is unsupported!
+		at org.apache.commons.lang.Validate.isTrue(Validate.java:157)
+		at org.mule.modules.oauth2.provider.transformer.HttpRequestBodyToParamMap.transformMessage(HttpRequestBodyToParamMap.java:54)
+		at org.mule.transformer.AbstractMessageTransformer.transform(AbstractMessageTransformer.java:141)
+	    + 3 more (set debug level logging or '-Dmule.verbose.exceptions=true' for everything)
+	********************************************************************************
+	
+	-- updated the listener on the console
+	-- Source code was misaligned -- Realigned source
+	
+-- new error for attempting to post after aligning correct source code with oauth app. 
+	ERROR 2016-02-22 13:53:45,824 [[oauth2-password].https.listener.worker.02] org.mule.exception.DefaultMessagingExceptionStrategy:
+	********************************************************************************
+	Message               : No serializer found for class org.mule.transport.NullPayload and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS) ) (org.codehaus.jackson.map.JsonMappingException)
+	Code                  : MULE_ERROR-64999
+	--------------------------------------------------------------------------------
+	Exception stack is:
+	1. No serializer found for class org.mule.transport.NullPayload and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS) ) (org.codehaus.jackson.map.JsonMappingException)
+	  org.codehaus.jackson.map.ser.impl.UnknownSerializer:52 (null)
+	2. No serializer found for class org.mule.transport.NullPayload and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS) ) (org.codehaus.jackson.map.JsonMappingException) (org.mule.api.transformer.TransformerException)
+	  org.mule.module.json.transformers.ObjectToJson:103 (http://www.mulesoft.org/docs/site/current3/apidocs/org/mule/api/transformer/TransformerException.html)
+	--------------------------------------------------------------------------------
+	Root Exception stack trace:
+	org.codehaus.jackson.map.JsonMappingException: No serializer found for class org.mule.transport.NullPayload and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS) )
+		at org.codehaus.jackson.map.ser.impl.UnknownSerializer.failForEmpty(UnknownSerializer.java:52)
+		at org.codehaus.jackson.map.ser.impl.UnknownSerializer.serialize(UnknownSerializer.java:25)
+		at org.codehaus.jackson.map.ser.StdSerializerProvider._serializeValue(StdSerializerProvider.java:610)
+	    + 3 more (set debug level logging or '-Dmule.verbose.exceptions=true' for everything)
+	********************************************************************************
+
