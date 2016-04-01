@@ -58,5 +58,12 @@ docker run -it -h oauth2-datascan-mock.cloudhub.io --name api-gateway \
 -v $PWD/domains:/opt/api-gateway/domains \
 -v $PWD/logs:/opt/api-gateway/logs \
 -v $PWD/policies:/opt/api-gateway/policies \
- granthbr/api-gateway bash
+ granthbr/api-gateway 
 ```
+The previous run command will start the api gateway in interactive mode so that the log is actively deployed as the application runs. 
+The log wil only display the Mule log, not the individual application logs. They are not set to merge. The developer has two options: one, mount the logs directory and tail individual logs from that directory. Two, change the wrapper config file to merge the application logs with the Mule log. 
+
+Best way to deploy APIs and applications is to exteranlly mount the apps directory and insert the zip there. 
+
+Another item of interest. THe conf directory can be externally mounted with specific cloudhub client/secret settings to link with the MuleSoft hosted environment. More detailed instructions are available on the MuleSoft documentation page for CloudHub (Google is your friend. :) ). Happy to resolve issues and accept collaborators if anyone is interested. 
+
