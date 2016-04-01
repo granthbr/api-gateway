@@ -56,8 +56,7 @@ docker run -it -h oauth2-datascan-mock.cloudhub.io --name api-gateway \
 -p 8083:8083  -p 8081:8081 -p 8082:8082 \
 -v $PWD/apps:/opt/api-gateway/apps \
 -v $PWD/domains:/opt/api-gateway/domains \
--v $PWD/conf:/opt/api-gateway/conf \
 -v $PWD/logs:/opt/api-gateway/logs \
 -v $PWD/policies:/opt/api-gateway/policies \
- granthbr/api-gateway
+ granthbr/api-gateway bash
 ```

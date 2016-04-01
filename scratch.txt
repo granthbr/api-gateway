@@ -47,3 +47,6 @@ scratch:
 	    + 3 more (set debug level logging or '-Dmule.verbose.exceptions=true' for everything)
 	********************************************************************************
 
+
+
+curl 'http://machine:8083/am/oauth2/access_token' -X OPTIONS -H 'Host: machine:8083' -H 'Accept: application/x-www-form-urlencoded,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'  -H 'Access-Control-Request-Method: POST' -H 'Access-Control-Request-Headers: authorization' -H 'Origin: http://machine:8081' 

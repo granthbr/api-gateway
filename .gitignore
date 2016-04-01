@@ -69,4 +69,4 @@ release.properties
 api-gateway/
 logs/
 conf/
-
+scratch.*

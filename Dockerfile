@@ -5,8 +5,11 @@
 FROM                   java
 MAINTAINER             Brandon Grantham <brandon.grantham@gmail.com>
 
+WORKDIR /opt/
+
 # This line can reference either a web url (ADD), network share or local file (COPY)
-COPY                    ./api-gateway /opt/api-gateway
+RUN curl https://s3.amazonaws.com/static-anypoint-mulesoft-com/api-gateway-distribution-standalone-2.2.0.zip > api-gateway.zip &&  \
+unzip api-gateway.zip -d /opt &&  mv /opt/$(ls -1t|tail -1) /opt/api-gateway && rm api-gateway.zip
 
 # Mule remote debugger
 EXPOSE  5000
