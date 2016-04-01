@@ -70,3 +70,5 @@ api-gateway/
 logs/
 conf/
 scratch.*
+apps/*
+*tar

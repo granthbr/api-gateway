@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policy id="2222" order="1"
+        policyName="CORS"
+        xmlns="http://www.mulesoft.org/schema/mule/policy"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:cors="http://www.mulesoft.org/schema/mule/cors"
+        xmlns:api-platform-gw="http://www.mulesoft.org/schema/mule/api-platform-gw"
+        xsi:schemaLocation="http://www.mulesoft.org/schema/mule/policy http://www.mulesoft.org/schema/mule/policy/current/mule-policy.xsd
+              http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cors/current/mule-cors.xsd
+              http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/schema/mule/api-platform-gw/current/mule-api-platform-gw.xsd">
+
+    <!-- CORS POLICY -->
+    <!-- CORS policy enforces CORS behaviour on an API. -->
+
+    <!-- The first part of the policy is configuring the allowed origins: -->
+    <cors:config name="default-cors">
+        <cors:origins>
+            <cors:origin url="http://machine:8081/console/" accessControlMaxAge="30">
+                <cors:methods>
+                    <cors:method>GET</cors:method>
+                    <cors:method>POST</cors:method>
+                    <cors:method>PUT</cors:method>
+                    <cors:method>DELETE</cors:method>
+					<cors:method>OPTIONS</cors:method>
+                </cors:methods>
+                <cors:headers>
+                    <cors:header>X-Requested-With,Access-Control-Allow-Origin</cors:header>
+                </cors:headers>
+            </cors:origin>
+        </cors:origins>
+    </cors:config>
+
+    <!-- and the second part is the injection of the filter itself, that uses the previously configured CORS policy. -->
+    <!-- Notice that the injection happens according to the pointcut criteria specified below. -->
+    <before>
+        <cors:validate config-ref="default-cors" acceptsCredentials="true" publicResource="false"/>
+    </before>
+
+    <!-- The following provides a custom trait to the RAML of the API if it uses APIkit. Otherwise it is ignored. -->
+    <raml-trait id="cors-enabled"><![CDATA[
+      headers:
+        Origin:
+          required: false
+          description: |
+            Name of the domain that served the page.
+          type: string
+      responses:
+        200?: &corsheaders
+          headers:
+            Access-Control-Allow-Origin:
+              required: false
+              description: |
+                Origin sites that are allowed.
+              type: string
+            Access-Control-Expose-Headers:
+              required: false
+              description: |
+                Indicates which headers are safe to expose to the API.
+              type: string
+            Access-Control-Allow-Credentials:
+              required: false
+              description: |
+                Indicates whether the response to request can be exposed when the omit credentials flag is unset.
+              enum: [true, false]
+        201?: *corsheaders
+        202?: *corsheaders
+        203?: *corsheaders
+        204?: *corsheaders
+        205?: *corsheaders
+        206?: *corsheaders
+    ]]></raml-trait>
+
+    <!-- Pointcuts specify where this policy takes effect. It refers to an specific Api and Version -->
+    <pointcut>
+        <api-platform-gw:api-pointcut apiName="LeaguesAPI-V1" apiVersion="1.0"/>
+    </pointcut>
+</policy>
