@@ -52,7 +52,7 @@ docker run -d --name api-gateway granthbr/api-gateway
 Or host volumes extenarlly with accessible ports
 
 ```bash 
-docker run -it -h oauth2-datascan-mock.cloudhub.io --name api-gateway \
+docker run -it -h oauth2-mock.cloudhub.io --name api-gateway \
 -p 8083:8083  -p 8081:8081 -p 8082:8082 \
 -v $PWD/apps:/opt/api-gateway/apps \
 -v $PWD/domains:/opt/api-gateway/domains \
