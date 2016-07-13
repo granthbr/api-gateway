@@ -56,7 +56,7 @@ target/
 # --------------- #
 # MAC-specific #
 # --------------- #
-**/.DS_Store
+/.DS_Store
 
 
 # --------------------------------------- #
@@ -66,9 +66,7 @@ src/test/resources/mule.test.properties
 pom.xml.releaseBackup
 
 release.properties
-api-gateway/
 logs/
 conf/
 scratch.*
 apps/*
-*tar

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policy id="8888"
+        policyName="AES OAuth2 Access Token Enforcement"
+        xmlns="http://www.mulesoft.org/schema/mule/policy"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:spring="http://www.springframework.org/schema/beans"
+        xmlns:oauth2-provider="http://www.mulesoft.org/schema/mule/oauth2-provider"
+        xmlns:mule-ss="http://www.mulesoft.org/schema/mule/spring-security"
+        xmlns:ss="http://www.springframework.org/schema/security"
+        xmlns:api-platform-gw="http://www.mulesoft.org/schema/mule/api-platform-gw"
+        xsi:schemaLocation="http://www.mulesoft.org/schema/mule/policy http://www.mulesoft.org/schema/mule/policy/current/mule-policy.xsd
+              http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+              http://www.mulesoft.org/schema/mule/oauth2-provider http://www.mulesoft.org/schema/mule/oauth2-provider/current/mule-oauth2-provider.xsd
+              http://www.mulesoft.org/schema/mule/spring-security http://www.mulesoft.org/schema/mule/spring-security/current/mule-spring-security.xsd
+              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-current.xsd
+              http://www.mulesoft.org/schema/mule/api-platform-gw http://www.mulesoft.org/schema/mule/api-platform-gw/current/mule-api-platform-gw.xsd">
+
+    <!-- OAUTH 2.0 POLICY -->
+    <!-- OAuth 2.0 policy protected an API using an on-the-fly OAuth 2.0 provider and also protects the endpoint using -->
+    <!-- an access token enforcement filter. -->
+    <!-- This policy is quite complex and requires several things: -->
+
+    <!-- The first part is the configuration of a security manager which in this case is using a mocked up one with a single -->
+    <!-- hardcoded user. This security manager will be used to authenticate users. -->
+    <spring:beans>
+        <ss:authentication-manager alias="example-authentication-manager">
+            <ss:authentication-provider>
+                <ss:user-service id="userService">
+                    <ss:user name="admin" password="admin" authorities="ROLE_ADMIN"/>
+                </ss:user-service>
+            </ss:authentication-provider>
+        </ss:authentication-manager>
+    </spring:beans>
+
+    <mule-ss:security-manager name="example-security-manager">
+        <mule-ss:delegate-security-provider name="example-security-provider" delegate-ref="example-authentication-manager" />
+    </mule-ss:security-manager>
+
+    <api-platform-gw:client-store id="example-client-store"/>
+    <api-platform-gw:client-security-provider id="example-client-security-provider"/>
+
+    <!-- The second part is about configuring a provider. The provider is highly customizable. -->
+    <oauth2-provider:config
+            name="example-oauth2-provider"
+            providerName="OAuth 2.0 Provider"
+            host="0.0.0.0"
+            port="8083"
+            resourceOwnerSecurityProvider-ref="example-security-provider"
+            clientSecurityProvider-ref="example-client-security-provider"
+            clientStore-ref="example-client-store"
+            scopes=""
+            defaultScopes=""
+			loginPage="org/mule/modules/oauth2/provider/www/templates/login.html"
+            supportedGrantTypes="AUTHORIZATION_CODE RESOURCE_OWNER_PASSWORD_CREDENTIALS CLIENT_CREDENTIALS IMPLICIT"
+            authorizationEndpointPath="am/oauth2/authorization"
+            accessTokenEndpointPath="am/oauth2/access_token"
+            tokenTtlSeconds="3600"
+            enableRefreshToken="true">
+    </oauth2-provider:config>
+
+    <!-- and the third part is the injection of the filter itself, that uses the previously configured OAuth 2 provider. -->
+    <!-- Notice that the injection happens according to the pointcut criteria specified below. -->
+    <before>
+        <oauth2-provider:validate config-ref="example-oauth2-provider" scopes="" />
+    </before>
+
+    <!-- The following provides a custom trait to the RAML of the API if it uses APIkit. Otherwise it is ignored. -->
+
+    <!-- Pointcuts specify where this policy takes effect. It refers to an specific Api and Version -->
+    <pointcut>
+        <api-platform-gw:api-pointcut apiName="{{ apiName }}" apiVersion="{{ apiVersionName }}"/>
+    </pointcut>
+
+</policy>
